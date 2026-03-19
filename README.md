@@ -12,8 +12,8 @@ The system models multiple delivery trucks, package constraints, and real-world 
 
 - Custom **Hash Table implementation** for fast package lookup
 - **Nearest Neighbor (Greedy) algorithm** for route optimization
-- \*\*Time-based simulation of deliveries
-- Handling \*\*real-world constraints\*\* (delays, grouped deliveries, address corrections)
+- Time-based simulation of deliveries
+- Handling real-world constraints (delays, grouped deliveries, address corrections)
 - CSV data processing and parsing
 - Object-Oriented Programming (OOP)
 
