@@ -1,26 +1,22 @@
-
-
 from datetime import datetime, timedelta
-from hash_table import HashTable
-from package import Package
-from load_packages import package_hash
-from load_packages import load_package_data
 import csv 
+from load_packages import package_hash
+from load_packages import load_packages
 
 # Load Distance Table
 distance_matrix = []
 address_list = []
 
-# Load addresses from wgups_address_file.csv
-def load_address_file(filename):
+# Load addresses from data/addresses.csv
+def load_addresses(filename):
     with open(filename, mode = 'r', encoding = 'utf-8-sig') as csv_file:
         csv_reader = csv.reader(csv_file)
         for row in csv_reader:
-            # row[1] is the address, skip row[0] because it's the hub
+            # Append the normalized address field from the CSV row
             address_list.append(row[2].strip())
 
-# Load distance table from wgups_distance_file.csv
-def load_distance_table(filename):
+# Load distance table from data/distances.csv
+def load_distances(filename):
     with open(filename, mode = 'r', encoding = 'utf-8-sig') as csv_file:
         csv_reader = csv.reader(csv_file)
         for row in csv_reader:
@@ -40,15 +36,14 @@ def get_distance(address1, address2):
         print(f"Address not found: '{address1}' or '{address2}'") 
         return 0.0
     
-# Check distance from address1 to address 2. 
-# If distance is missing/empty for address1 to address2, look up reverse (address 2 to address 1).
-# If row 2, column 14 is empty on the distance table then it's not showing distance from address 2 to address 14, so the code clips it and checks the distance from address 14 to address 2 which is row 14 column 2. 
+# Check distance from address1 to address2. 
+# If the direct distance is missing, look up the reverse distance
     distance = distance_matrix[index1][index2]
     if distance == 0.0:
         distance = distance_matrix[index2][index1]
     return distance 
 
-# Constant for Hub address format to match from wgups_address_file.csv
+# Constant for Hub address format to match from data/addresses.csv
 HUB_ADDRESS = "4001 South 700 East"
 
 # Truck class
@@ -241,12 +236,12 @@ def deliver_packages(truck, check_time):
         truck.add_miles(distance_to_hub)
         truck.current_location = HUB_ADDRESS
 
-''' WGUPS delivery program user interface loops through many options until the user selects option 4- Exit program. Depending on the user's choice, the main_menu function calls other functions for package status lookups, single package search, or total miles calculation.
+''' The delivery program user interface loops through many options until the user selects option 3- Exit program. Depending on the user's choice, the main_menu function calls other functions for package status lookups, single package search, or total miles calculation.
 '''
 def main_menu():
     while True: # Loop through options until user exists
         print("**************************************")
-        print("Welcome to the WGUPS Delivery App!")
+        print("Welcome to the Package Routing System!")
         print("**************************************")
         print("1. View all package statuses at a specific time")
         print("2. Look up package by ID and time")
@@ -258,13 +253,29 @@ def main_menu():
         if choice == "1":
             time_str = input("Enter time (HH:MM:SS or HH:MM): ")
             view_all_packages(time_str)
+            
         elif choice == "2":
-            time_str = input("Enter time (HH:MM:SS or HH:MM): ")
-            package_id = int(input("Enter package ID # to look up: "))
-            lookup_package(package_id, time_str)
+            while True:
+                time_str = input("Enter time (HH:MM:SS or HH:MM): ")
+                if parse_time_input(time_str) is None:
+                    continue
+                break
+            
+            while True:
+                package_id_input = input("Enter package ID # to look up: ")
+            
+                if not package_id_input.isdigit():
+                    print("Please enter a valid numeric package ID.\n")
+                    continue
+            
+                package_id = int(package_id_input)
+                lookup_package(package_id, time_str)
+                break
+            
         elif choice == "3":
             print("Exiting program. Goodbye!")
             break
+        
         else:
             print("Please enter a valid choice.\n")
 
@@ -321,8 +332,6 @@ def view_all_packages(time_str):
         # For package 9, only update address after 10:20
         if package.package_id == 9 and check_time < datetime.strptime("10:20:00", "%H:%M:%S"):
             package.address = "300 State St" # Wrong address before correction
-        else:
-            package.address = package.address # Corrected address
 
         print(f"\n*********** Package {package.package_id} ***********")
         print(f"Address: {package.address} | " 
@@ -441,12 +450,9 @@ def show_total_miles(time_str):
     print(f"\nTotal miles traveled by all trucks at {check_time.strftime('%H:%M:%S')}: {total_miles:.2f}\n")
 
 # Load data from CSV files
-load_address_file("wgups_address_file.csv")
-load_distance_table("wgups_distance_table.csv")
-load_package_data("wgups_package_file.csv")
-
-# Simulate the delivery day
-end_of_day = datetime.strptime("17:00:00", "%H:%M:%S") 
+load_addresses("data/addresses.csv")
+load_distances("data/distances.csv")
+load_packages("data/packages.csv")
 
 # Start the command line program
 if __name__ == "__main__":
