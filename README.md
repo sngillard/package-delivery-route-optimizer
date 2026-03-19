@@ -1,6 +1,6 @@
 # Package Delivery Route Optimizer
 
-> A route optimization simulation using data structures and algorithms.
+A route optimization simulation using data structures and algorithms.
 
 ## Overview:
 
@@ -10,10 +10,12 @@ The system models multiple delivery trucks, package constraints, and real-world 
 
 ## Key Concepts & Skills:
 
--Custom **Hash Table implementation** for fast package lookup -**Nearest Neighbor (Greedy) algorithm** for route optimization -**Time-based simulation of deliveries
--Handling **real-world constraints\*\* (delays, grouped deliveries, address corrections)
--CSV data processing and parsing
--Object-Oriented Programming (OOP)
+- Custom **Hash Table implementation** for fast package lookup
+- **Nearest Neighbor (Greedy) algorithm** for route optimization
+- \*\*Time-based simulation of deliveries
+- Handling \*\*real-world constraints\*\* (delays, grouped deliveries, address corrections)
+- CSV data processing and parsing
+- Object-Oriented Programming (OOP)
 
 ## Features
 
@@ -74,26 +76,6 @@ While not perfectly optimal, it provides a strong balance between performance an
 
 ![Time & Space Complexity](images/time_and_space_complexity.png)
 
-### Time Complexity
-
-| Component               | Complexity   |
-| ----------------------- | ------------ |
-| Hash table lookup       | O(1) average |
-| CSV loading             | O(n)         |
-| Distance matrix parsing | O(n^2)       |
-| Routing algorithm       | O(n^2)       |
-| **Overall program**     | **O(n^2)**   |
-
-The routing algorithm dominates runtime due to repeated scanning of remaining packages.
-
-### Space Complexity
-
-| Component           | Complexity |
-| ------------------- | ---------- |
-| Hash table          | O(n)       |
-| Distance matrix     | O(n^2)     |
-| **Overall program** | **O(n^2)** |
-
 ## Data Structure: Hash Table
 
 A custom hash table is used to store package data.
@@ -124,16 +106,15 @@ A custom hash table is used to store package data.
 
 ```bash
 package-delivery-route-optimizer/
-|
-|---data
-    |---addresses.csv
-    |---distances.csv
-    |---packages.csv
-|---images
-    |---time_and_space_complexity.png
-|---hash_table.py
-|---load_packages.py
-|---main.py
-|---package.py
-|---README.md
+├── data
+|  ├── addresses.csv
+|  ├── distances.csv
+|  ├── packages.csv
+├── images
+|  ├── time_and_space_complexity.png
+├── hash_table.py
+├── load_packages.py
+├── main.py
+├── package.py
+├── README.md
 ```
